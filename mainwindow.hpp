@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include "highlighter.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,5 +23,6 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    Highlighter *highlighter;
 };
 #endif // MAINWINDOW_HPP

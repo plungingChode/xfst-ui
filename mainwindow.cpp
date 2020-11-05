@@ -1,7 +1,5 @@
 #include "mainwindow.hpp"
 #include "./ui_mainwindow.h"
-#include <memory>
-#include <stdexcept>
 #include <string>
 #include <array>
 #include <QFile>
@@ -34,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->pteInput->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     ui->pteInput->installEventFilter(this);
+
+    highlighter = new Highlighter(ui->pteInput->document());
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +46,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
         QKeyEvent *kev = static_cast<QKeyEvent*>(event);
 
         // capture ctrl + s
-        if (kev->modifiers() == Qt::ControlModifier && kev->key() == 83) {
+        if (kev->modifiers() == Qt::ControlModifier && kev->key() == Qt::Key_S) {
             QFile f("temp.xfst");
             f.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream out(&f);
@@ -64,6 +64,21 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
             ui->tbrOutput->setText(QString::fromStdString(shell_stdout(cmd)));
             return true;
         }
+
+        // autocomplete square brackets
+        if (!kev->modifiers() && kev->key() == '[') {
+            QTextCursor c = ui->pteInput->textCursor();
+            c.insertText("[]");
+            c.movePosition(QTextCursor::PreviousCharacter);
+            ui->pteInput->setTextCursor(c);
+            return true;
+        }
+
+        // replace tab with 4 spaces
+//        if (!kev->modifiers() && kev->key() == Qt::Key_Tab) {
+//            ui->pteInput->textCursor().insertText("    ");
+//            return true;
+//        }
     }
     return QObject::eventFilter(obj, event);
 }

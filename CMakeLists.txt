@@ -33,6 +33,8 @@ if(ANDROID)
     mainwindow.cpp
     mainwindow.hpp
     mainwindow.ui
+    highlighter.cpp
+    highlighter.hpp
   )
 else()
   add_executable(qt-xfst
@@ -40,6 +42,8 @@ else()
     mainwindow.cpp
     mainwindow.hpp
     mainwindow.ui
+    highlighter.cpp
+    highlighter.hpp
   )
 endif()
 

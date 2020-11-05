@@ -47,19 +47,22 @@ QString readText(const QString &fname) {
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , scriptPath()
+    , scriptPath(readText(LAST_EDIT_FILE))
+    , monospaceFont("undefined", 15)
 {
-    QString lastEdited = readText(LAST_EDIT_FILE);
+    monospaceFont.setStyleHint(QFont::Monospace);
 
     ui->setupUi(this);
     ui->pteInput->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     ui->pteInput->installEventFilter(this);
+    ui->pteInput->setFont(monospaceFont);
     highlighter = new Highlighter(ui->pteInput->document());
 
-    if (!lastEdited.isEmpty()) {
-        scriptPath = lastEdited;
-        ui->pteInput->setText(readText(lastEdited));
+    if (!scriptPath.isEmpty()) {
+        ui->pteInput->setText(readText(scriptPath));
     }
+
+    ui->tbrOutput->setFont(monospaceFont);
 }
 
 MainWindow::~MainWindow()
@@ -73,6 +76,8 @@ MainWindow::~MainWindow()
 bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *kev = static_cast<QKeyEvent*>(event);
+
+//        qDebug() << kev->key();
 
         // execute XFST on Ctrl + Enter
         if (kev->modifiers() == Qt::ControlModifier &&
@@ -88,6 +93,22 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
         {
             save();
             xfst();
+            return true;
+        }
+
+        // increase font size on Ctrl + '+'
+        if (kev->modifiers() & Qt::ControlModifier &&
+            kev->key() == Qt::Key_Plus)
+        {
+            changeFontSize(true);
+            return true;
+        }
+
+        // decrease font size on Ctrl + '-'
+        if (kev->modifiers() & Qt::ControlModifier &&
+            kev->key() == Qt::Key_Minus)
+        {
+            changeFontSize(false);
             return true;
         }
 
@@ -123,6 +144,14 @@ void MainWindow::save() {
     }
 }
 
+void MainWindow::changeFontSize(bool increase) {
+    int newSize = monospaceFont.pointSize() + (increase ? +1 : -1);
+    monospaceFont.setPointSize(newSize);
+
+    ui->pteInput->setFont(monospaceFont);
+    ui->tbrOutput->setFont(monospaceFont);
+}
+
 void MainWindow::on_btnNew_clicked()
 {
     if (!scriptPath.isEmpty()) {
@@ -150,7 +179,7 @@ void MainWindow::on_btnSaveAs_clicked()
     save();
 }
 
-void MainWindow::on_cbQuiet_stateChanged(int arg1)
+void MainWindow::on_cbQuiet_stateChanged(int)
 {
     xfst();
 }

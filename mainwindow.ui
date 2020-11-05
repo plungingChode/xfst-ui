@@ -461,14 +461,6 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QTextEdit" name="pteInput">
-        <property name="font">
-         <font>
-          <family>Monospace</family>
-          <pointsize>15</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
         <property name="lineWrapMode">
          <enum>QTextEdit::WidgetWidth</enum>
         </property>
@@ -513,14 +505,7 @@
     <item>
      <layout class="QVBoxLayout" name="layout_output">
       <item>
-       <widget class="QTextBrowser" name="tbrOutput">
-        <property name="font">
-         <font>
-          <family>Monospace</family>
-          <pointsize>15</pointsize>
-         </font>
-        </property>
-       </widget>
+       <widget class="QTextBrowser" name="tbrOutput"/>
       </item>
       <item>
        <widget class="QCheckBox" name="cbQuiet">

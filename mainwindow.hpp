@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QFont>
 #include "highlighter.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +23,8 @@ protected:
     void xfst();
     void save();
 
+    void changeFontSize(bool increase);
+
 private slots:
     void on_btnNew_clicked();
 
@@ -35,5 +38,6 @@ private:
     Ui::MainWindow *ui;
     Highlighter *highlighter;
     QString scriptPath;
+    QFont monospaceFont;
 };
 #endif // MAINWINDOW_HPP

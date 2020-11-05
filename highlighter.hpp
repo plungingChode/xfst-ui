@@ -24,10 +24,7 @@ private:
 
     QTextCharFormat keywordFormat;
     QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat identifierFormat;
-
-    QRegularExpression identifierSearch;
-    QMap<QString, HighlightingRule> identifiers;
+    QTextCharFormat operatorFormat;
 };
 
 #endif // HIGHLIGHTER_HPP

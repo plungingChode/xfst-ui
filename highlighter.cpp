@@ -6,7 +6,7 @@ Highlighter::Highlighter(QTextDocument *parent)
 {
     HighlightingRule rule;
 
-    keywordFormat.setForeground(Qt::blue);
+    keywordFormat.setForeground(QBrush(QColor(86, 155, 213)));
     keywordFormat.setFontWeight(QFont::Bold);
     const QString keywordPatterns[] = {
         QStringLiteral("\\bdefine\\b"),
@@ -19,17 +19,32 @@ Highlighter::Highlighter(QTextDocument *parent)
         highlightingRules.append(rule);
     }
 
-    singleLineCommentFormat.setForeground(Qt::darkCyan);
-    rule.pattern = QRegularExpression(QStringLiteral("#[^\n]*"));
-    rule.format = singleLineCommentFormat;
-    highlightingRules.append(rule);
+    // operators
+    operatorFormat.setForeground(QBrush(QColor(155, 219, 253)));
+    const QString operatorPatterns[] = {
+        QStringLiteral("\\s?\\|\\|\\s?"),
+        QStringLiteral("\\s?->\\s?"),
+        QStringLiteral("\\s?\\.o\\.\\s?"),
+        QStringLiteral("\\s?_\\s?"),
+        QStringLiteral("\\s?@\\s?"),
+    };
 
-    rule.format.setForeground(Qt::magenta);
+    for (const QString &pattern : operatorPatterns) {
+        rule.format = operatorFormat;
+        rule.pattern = QRegularExpression(pattern);
+        highlightingRules.append(rule);
+    }
+
+    // apply down
+    rule.format.setForeground(QBrush(QColor(224, 146, 207)));
     rule.format.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression(QStringLiteral("\\bapply down\\b"));
     highlightingRules.append(rule);
 
-    identifierSearch = QRegularExpression(QStringLiteral("define\\s(.+?)\\s"));
+    singleLineCommentFormat.setForeground(QBrush(QColor(106, 152, 85)));
+    rule.pattern = QRegularExpression(QStringLiteral("#[^\n]*"));
+    rule.format = singleLineCommentFormat;
+    highlightingRules.append(rule);
 }
 
 void Highlighter::highlightBlock(const QString &text)
@@ -41,20 +56,6 @@ void Highlighter::highlightBlock(const QString &text)
             setFormat(match.capturedStart(), match.capturedLength(), r.format);
         }
     }
-
-//    auto idMatches = identifierSearch.globalMatch(text);
-//    QVector<QString> matched;
-//    while (idMatches.hasNext()) {
-//        auto match = idMatches.next().captured(1);
-//        if (!identifiers.contains(match)) {
-//            HighlightingRule r = {
-//                QRegularExpression("\\b" + match + "\\b"),
-//                identifierFormat
-//            };
-//            identifiers.insert(match, r);
-//        }
-//        matched.append(match);
-//    }
 }
 
 
